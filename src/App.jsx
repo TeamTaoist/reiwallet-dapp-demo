@@ -22,7 +22,7 @@ const Box = styled.div`
 function App() {
 
     const [address,setAddress] = useState('')
-    const [balance,setBalance] = useState(0)
+    const [balance,setBalance] = useState("-")
     const connect = async() =>{
         try{
             let addr =  await window.ckb.request({method:"ckb_requestAccounts"})
