@@ -1,5 +1,5 @@
 import { Button,Input } from 'antd';
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import styled from "styled-components";
 import GlobalStyle from "./utils/GlobalStyle";
 import {formatUnit, parseUnit} from "@ckb-lumos/bi";
@@ -50,6 +50,17 @@ function App() {
     const [amount,setAmount] =useState('100');
     const [txHash,setTxhash] = useState('')
 
+    useEffect(()=>{
+
+        window.ckb.on('accountsChanged', function (data) {
+            console.log("==accountsChanged==",data)
+        });
+        window.ckb.on('chainChanged', function (data) {
+            console.log("==chainChanged==",data)
+        });
+
+    },[])
+
     const connect = async() =>{
         try{
             let addr =  await window.ckb.request({method:"ckb_requestAccounts"})
@@ -82,8 +93,6 @@ function App() {
     }
 
     const handleSend = async() =>{
-
-
         try{
             let rt = await window.ckb.request({method:"ckb_sendTransaction",data:{
                     amount,
