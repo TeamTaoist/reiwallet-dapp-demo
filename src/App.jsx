@@ -1,8 +1,8 @@
 import { Button,Input } from 'antd';
-import {useEffect, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import styled from "styled-components";
 import GlobalStyle from "./utils/GlobalStyle";
-import {formatUnit, parseUnit} from "@ckb-lumos/bi";
+import {formatUnit} from "@ckb-lumos/bi";
 
 const Box = styled.div`
     margin: 40px 100px ;
@@ -49,12 +49,16 @@ function App() {
     const [sendTo,setSendTo] =useState('ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqf5kmkgn25z8xajscwkw88ew3hagjfd5uqttnscm');
     const [amount,setAmount] =useState('100');
     const [txHash,setTxhash] = useState('')
+    const [network,setNetwork] = useState('')
+    const [feeRate,setFeeRate] = useState(null)
+
+    const  accountChangesFun =  useCallback((data) => {
+        console.log("==accountsChanged==",data)
+    },[])
 
     useEffect(()=>{
 
-        window.ckb.on('accountsChanged', function (data) {
-            console.log("==accountsChanged==",data)
-        });
+        window.ckb.on('accountsChanged', accountChangesFun);
         window.ckb.on('chainChanged', function (data) {
             console.log("==chainChanged==",data)
         });
@@ -94,7 +98,7 @@ function App() {
 
     const handleSend = async() =>{
         try{
-            let rt = await window.ckb.request({method:"ckb_sendTransaction",data:{
+            let rt = await window.ckb.request({method:"ckb_sendCKB",data:{
                     amount,
                     to:sendTo
                 }})
@@ -117,7 +121,53 @@ function App() {
             case "amount":
                 setAmount(value)
                 break;
+        }
+    }
 
+    const getNetwork = async() =>{
+        try{
+            let rt = await window.ckb.request({method:"ckb_getNetwork"})
+            setNetwork(rt);
+        }catch (e) {
+            console.error("==ckb_sendCKB=",e)
+        }
+    }
+    const switchNetwork = async() =>{
+        let data = network === "mainnet"?'testnet':"mainnet"
+        try{
+            let rt = await window.ckb.request({method:"ckb_switchNetwork",data})
+            console.log(rt)
+        }catch (e) {
+            console.error("==ckb_sendCKB=",e)
+        }
+    }
+
+    const getFeeRate = async() =>{
+        try{
+            let rt = await window.ckb.request({method:"ckb_getFeeRate"})
+            setFeeRate(rt)
+        }catch (e) {
+            console.error("==ckb_sendCKB=",e)
+        }
+    }
+
+    const getConnected = async() =>{
+        try{
+            let rt = await window.ckb.isConnected()
+            console.log(rt)
+
+        }catch (e) {
+            console.error("==ckb_sendCKB=",e)
+        }
+    }
+
+    const offAccount = () =>{
+        try{
+           window.ckb.off('accountsChanged', accountChangesFun)
+            console.log("---offAccount---")
+
+        }catch (e) {
+            console.error("==ckb_sendCKB=",e)
         }
     }
 
@@ -131,42 +181,73 @@ function App() {
 
                 <div>{address}</div>
             </li>
-            {
-                !!address && <li>
-                    <div>
-                        <Button type="primary" onClick={() => getBalance()}>get balance</Button>
-                    </div>
-
-                    <div>{balance} CKB</div>
-                </li>
-
-            }
-            {
-                !!address &&<li>
+            <li>
                 <div>
-                    <Input type="text" name="message" value={message} onChange={(e)=>handleInput(e)}/>
+                    <Button type="primary" onClick={() => getBalance()}>get balance</Button>
+                </div>
+
+                <div>{balance} CKB</div>
+            </li>
+
+
+            <li>
+                <div>
+                    <Input type="text" name="message" value={message} onChange={(e) => handleInput(e)}/>
                 </div>
                 <div>
                     <Button type="primary" onClick={() => testSign()}>sign message</Button>
                 </div>
                 <div className="sig">{signature}</div>
             </li>
-            }
-            {
-                !!address && <li className="noFlex">
+
+            <li className="noFlex">
                 <div>
-                    <div className="flex"><span>Transfer To</span><Input value={sendTo} name="sendTo" onChange={(e)=>handleInput(e)} /></div>
+                    <div className="flex"><span>Transfer To</span><Input value={sendTo} name="sendTo"
+                                                                         onChange={(e) => handleInput(e)}/></div>
 
                 </div>
                 <div>
-                    <div className="flex"><span>Amount</span><Input value={amount} name="amount" onChange={(e)=>handleInput(e)} /></div>
+                    <div className="flex"><span>Amount</span><Input value={amount} name="amount"
+                                                                    onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>{txHash}</div>
                 <div>
                     <Button type="primary" onClick={() => handleSend()}>Transaction</Button>
                 </div>
             </li>
-            }
+
+            <li>
+                <div>
+                    <Button type="primary" onClick={() => getNetwork()}>get Network</Button>
+                </div>
+
+                <div>{network}</div>
+            </li>
+            <li>
+                <div>
+                    <Button type="primary" onClick={() => switchNetwork()}>switch Network</Button>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <Button type="primary" onClick={() => getFeeRate()}>Fee rate</Button>
+                </div>
+                <div>
+                    <span>mean:{feeRate?.mean ?? 0}</span> --
+                    <span>median:{feeRate?.median ??0 }</span>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <Button type="primary" onClick={() => getConnected()}>IsConnected</Button>
+                </div>
+            </li>
+            <li>
+                <div>
+                    <Button type="primary" onClick={() => offAccount()}>Off </Button>
+                </div>
+            </li>
+
         </ul>
 
         <GlobalStyle/>
