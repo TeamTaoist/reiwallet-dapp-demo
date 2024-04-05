@@ -28,7 +28,7 @@ const Box = styled.div`
         gap: 10px;
         span{
             flex-shrink: 0;
-            min-width: 100px;
+            min-width: 150px;
             background: #f2f2f2;
             text-align: center;
         }
@@ -51,6 +51,20 @@ function App() {
     const [txHash,setTxhash] = useState('')
     const [network,setNetwork] = useState('')
     const [feeRate,setFeeRate] = useState(null)
+    const [txIndex,setTxIndex] = useState('')
+    const [txDobHash,setTxDobHash] = useState('')
+    const [DobHash,setDobHash] = useState('')
+    const [sendDOBTo,setSendDOBTo] =useState('ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqf5kmkgn25z8xajscwkw88ew3hagjfd5uqttnscm');
+
+    const [sendClusterTo,setSendClusterTo] =useState('ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqf5kmkgn25z8xajscwkw88ew3hagjfd5uqttnscm');
+    const [ClusterIndex,setClusterIndex] = useState('')
+    const [ClusterHash,setClusterHash] = useState('')
+    const [ClusterTx,setClusterTx] = useState('')
+
+    const [sendToSUDT,setSendToSUDT] =useState('ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqf5kmkgn25z8xajscwkw88ew3hagjfd5uqttnscm');
+    const [SUDTamount,setSUDTAmount] =useState('100');
+    const [SUDTHash,setSUDThash] = useState('')
+    const [token,setToken] = useState('')
 
     const  accountChangesFun =  useCallback((data) => {
         console.log("==accountsChanged==",data)
@@ -121,6 +135,33 @@ function App() {
             case "amount":
                 setAmount(value)
                 break;
+            case "txIndex":
+                setTxIndex(value)
+                break;
+            case "txDobHash":
+                setTxDobHash(value)
+                break;
+            case "sendDOBTo":
+                setSendDOBTo(value)
+                break;
+            case "sendClusterTo":
+                setSendClusterTo(value)
+                break;
+            case "ClusterIndex":
+                setClusterIndex(value)
+                break;
+            case "ClusterHash":
+                setClusterHash(value)
+                break;
+            case "sendToSUDT":
+                setSendToSUDT(value)
+                break;
+            case "SUDTamount":
+                setSUDTAmount(value)
+                break;
+            case "token":
+                setToken(value)
+                break;
         }
     }
 
@@ -136,6 +177,7 @@ function App() {
         let data = network === "mainnet"?'testnet':"mainnet"
         try{
             let rt = await window.ckb.request({method:"ckb_switchNetwork",data})
+            await getNetwork()
             console.log(rt)
         }catch (e) {
             console.error("==ckb_sendCKB=",e)
@@ -168,6 +210,52 @@ function App() {
 
         }catch (e) {
             console.error("==ckb_sendCKB=",e)
+        }
+    }
+
+    const handleSendDob = async() =>{
+        try{
+            let rt = await window.ckb.request({method:"ckb_sendDOB",data:{
+                    outPoint:{
+                        index:txIndex,
+                        txHash:txDobHash
+                    },
+                    to:sendDOBTo
+                }})
+
+            setDobHash(rt);
+        }catch (e) {
+            console.error("==ckb_sendDOB=",e)
+        }
+    }
+
+const handleCluster= async() =>{
+        try{
+            let rt = await window.ckb.request({method:"ckb_sendCluster",data:{
+                    outPoint:{
+                        index:ClusterIndex,
+                        txHash:ClusterHash
+                    },
+                    to:sendClusterTo
+                }})
+
+            setClusterTx(rt);
+        }catch (e) {
+            console.error("==ckb_sendCluster=",e)
+        }
+    }
+
+    const handleSendSUDT = async() =>{
+        try{
+            let rt = await window.ckb.request({method:"ckb_sendSUDT",data:{
+                    amount:SUDTamount,
+                    to:sendToSUDT,
+                    token
+                }})
+
+            setSUDThash(rt);
+        }catch (e) {
+            console.error("==ckb_sendCluster=",e)
         }
     }
 
@@ -212,7 +300,7 @@ function App() {
                 </div>
                 <div>{txHash}</div>
                 <div>
-                    <Button type="primary" onClick={() => handleSend()}>Transaction</Button>
+                    <Button type="primary" onClick={() => handleSend()}>Send CKB</Button>
                 </div>
             </li>
 
@@ -234,7 +322,7 @@ function App() {
                 </div>
                 <div>
                     <span>mean:{feeRate?.mean ?? 0}</span> --
-                    <span>median:{feeRate?.median ??0 }</span>
+                    <span>median:{feeRate?.median ?? 0}</span>
                 </div>
             </li>
             <li>
@@ -245,6 +333,66 @@ function App() {
             <li>
                 <div>
                     <Button type="primary" onClick={() => offAccount()}>Off </Button>
+                </div>
+            </li>
+
+            <li className="noFlex">
+                <div>
+                    <div className="flex"><span>Transfer To</span><Input value={sendDOBTo} name="sendDOBTo"
+                                                                         onChange={(e) => handleInput(e)}/></div>
+
+                </div>
+                <div>
+                    <div className="flex"><span>Index (OutPoint)</span><Input value={txIndex} name="txIndex"
+                                                                              onChange={(e) => handleInput(e)}/></div>
+                </div>
+                <div>
+                    <div className="flex"><span>TxHash (OutPoint)</span><Input value={txDobHash} name="txDobHash"
+                                                                               onChange={(e) => handleInput(e)}/></div>
+                </div>
+                <div>{DobHash}</div>
+                <div>
+                    <Button type="primary" onClick={() => handleSendDob()}>Send DOB</Button>
+                </div>
+            </li>
+
+            <li className="noFlex">
+                <div>
+                    <div className="flex"><span>Transfer To</span><Input value={sendClusterTo} name="sendClusterTo"
+                                                                         onChange={(e) => handleInput(e)}/></div>
+
+                </div>
+                <div>
+                    <div className="flex"><span>Index (OutPoint)</span><Input value={ClusterIndex} name="ClusterIndex"
+                                                                              onChange={(e) => handleInput(e)}/></div>
+                </div>
+                <div>
+                    <div className="flex"><span>TxHash (OutPoint)</span><Input value={ClusterHash} name="ClusterHash"
+                                                                               onChange={(e) => handleInput(e)}/></div>
+                </div>
+                <div>{ClusterTx}</div>
+                <div>
+                    <Button type="primary" onClick={() => handleCluster()}>Send Cluster</Button>
+                </div>
+            </li>
+
+            <li className="noFlex">
+                <div>
+                    <div className="flex"><span>Transfer To</span><Input value={sendToSUDT} name="sendToSUDT"
+                                                                         onChange={(e) => handleInput(e)}/></div>
+
+                </div>
+                <div>
+                    <div className="flex"><span>Amount</span><Input value={SUDTamount} name="SUDTamount"
+                                                                    onChange={(e) => handleInput(e)}/></div>
+                </div>
+                <div>
+                    <div className="flex"><span>Token</span><Input value={token} name="token"
+                                                                    onChange={(e) => handleInput(e)}/></div>
+                </div>
+                <div>{SUDTHash}</div>
+                <div>
+                    <Button type="primary" onClick={() => handleSendSUDT()}>Send SUDT</Button>
                 </div>
             </li>
 
