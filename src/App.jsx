@@ -40,10 +40,20 @@ const Box = styled.div`
         line-height: 1em;
     }
 `
+
+const BalanceBox = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    .tit{
+        margin-right: 10px;
+    }
+`
 function App() {
 
     const [address,setAddress] = useState('')
-    const [balance,setBalance] = useState("-");
+    const [balance,setBalance] = useState(null);
     const [message,setMessage] = useState("");
     const [signature,setSignature] =useState('');
     const [sendTo,setSendTo] =useState('ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqf5kmkgn25z8xajscwkw88ew3hagjfd5uqttnscm');
@@ -88,12 +98,15 @@ function App() {
         }
 
     }
-    const getBalance = async () =>{
+    const getCapacity = async () =>{
         try{
 
             let rt =  await window.ckb.request({method:"ckb_getCapacity",data:[address]})
-            let formatRt = formatUnit(rt,"ckb")
-            setBalance(formatRt)
+            const {capacity,occupied} = rt;
+            setBalance({
+                capacity:formatUnit(capacity,"ckb"),
+                occupied:formatUnit(occupied,"ckb")
+            })
         }catch (e) {
             console.error("==getBalance=",e)
         }
@@ -271,10 +284,20 @@ const handleCluster= async() =>{
             </li>
             <li>
                 <div>
-                    <Button type="primary" onClick={() => getBalance()}>get balance</Button>
+                    <Button type="primary" onClick={() => getCapacity()}>get Capacity</Button>
                 </div>
 
-                <div>{balance} CKB</div>
+                <BalanceBox>
+                    <div>
+                        <span className="tit">Capacity</span>
+                        <span>{balance?.capacity ? balance?.capacity : "--"} CKB</span>
+                    </div>
+                    <div>
+                        <span className="tit">Occupied</span>
+                        <span>{balance?.occupied ? balance?.occupied : "--"} CKB</span>
+                    </div>
+
+                </BalanceBox>
             </li>
 
 
