@@ -76,12 +76,20 @@ function App() {
     const [SUDTHash,setSUDThash] = useState('')
     const [token,setToken] = useState('')
 
+    const [sendToXUDT,setSendToXUDT] =useState('ckt1qzda0cr08m85hc8jlnfp3zer7xulejywt49kt2rr0vthywaa50xwsqf5kmkgn25z8xajscwkw88ew3hagjfd5uqttnscm');
+    const [XUDTamount,setXUDTAmount] =useState('10');
+    const [XUDTHash,setXUDThash] = useState('')
+    const [XUDTargs,setXUDTargs] = useState('0xece07a9588dcc4de97686b0305fb295e6508d607f9eb2afce9e9e3e453c6a1e9')
+    const [XUDTcodehash,setXUDTcodehash] = useState('0x25c29dc317811a6f6f3985a7a9ebc4838bd388d19d0feeecf0bcd60f6c0975bb')
+    const [XUDTtype,setXUDTtype] = useState('type')
+
+
+
     const  accountChangesFun =  useCallback((data) => {
         console.log("==accountsChanged==",data)
     },[])
 
     useEffect(()=>{
-
         window.ckb.on('accountsChanged', accountChangesFun);
         window.ckb.on('chainChanged', function (data) {
             console.log("==chainChanged==",data)
@@ -174,6 +182,21 @@ function App() {
                 break;
             case "token":
                 setToken(value)
+                break;
+            case "sendToXUDT":
+                setSendToXUDT(value)
+                break;
+            case "XUDTamount":
+                setXUDTAmount(value)
+                break;
+            case "XUDTargs":
+                setXUDTargs(value)
+                break;
+            case "XUDTcodehash":
+                setXUDTcodehash(value)
+                break;
+            case "XUDTtype":
+                setXUDTtype(value)
                 break;
         }
     }
@@ -268,7 +291,34 @@ const handleCluster= async() =>{
 
             setSUDThash(rt);
         }catch (e) {
-            console.error("==ckb_sendCluster=",e)
+            console.error("==ckb_sendSUDT=",e)
+        }
+    }
+    const handleSendXUDT = async() =>{
+
+        console.log({
+            amount:XUDTamount,
+            to:sendToXUDT,
+            token:{
+                args:XUDTargs,
+                code_hash:XUDTcodehash,
+                hash_type:XUDTtype
+            }
+        })
+        try{
+            let rt = await window.ckb.request({method:"ckb_sendXUDT",data:{
+                    amount:XUDTamount,
+                    to:sendToXUDT,
+                    typeScript:{
+                        args:XUDTargs,
+                        code_hash:XUDTcodehash,
+                        hash_type:XUDTtype
+                    }
+                }})
+
+            setXUDThash(rt);
+        }catch (e) {
+            console.error("==ckb_sendXUDT=",e)
         }
     }
 
@@ -416,6 +466,33 @@ const handleCluster= async() =>{
                 <div>{SUDTHash}</div>
                 <div>
                     <Button type="primary" onClick={() => handleSendSUDT()}>Send SUDT</Button>
+                </div>
+            </li>
+            <li className="noFlex">
+                <div>
+                    <div className="flex"><span>Transfer To</span><Input value={sendToXUDT} name="sendToXUDT"
+                                                                         onChange={(e) => handleInput(e)}/></div>
+
+                </div>
+                <div>
+                    <div className="flex"><span>Amount</span><Input value={XUDTamount} name="XUDTamount"
+                                                                    onChange={(e) => handleInput(e)}/></div>
+                </div>
+                <div>
+                    <div className="flex"><span>Args(OutPoint)</span><Input value={XUDTargs} name="XUDTargs"
+                                                                    onChange={(e) => handleInput(e)}/></div>
+                </div>
+                <div>
+                    <div className="flex"><span>CodeHash(OutPoint)</span><Input value={XUDTcodehash} name="XUDTcodehash"
+                                                                    onChange={(e) => handleInput(e)}/></div>
+                </div>
+                <div>
+                    <div className="flex"><span>Type(OutPoint)</span><Input value={XUDTtype} name="XUDTtype"
+                                                                    onChange={(e) => handleInput(e)}/></div>
+                </div>
+                <div>{XUDTHash}</div>
+                <div>
+                    <Button type="primary" onClick={() => handleSendXUDT()}>Send XUDT / RGB++</Button>
                 </div>
             </li>
 
