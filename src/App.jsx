@@ -322,6 +322,10 @@ const handleCluster= async() =>{
         }
     }
 
+    const handleSendTransaction = () =>{
+
+    }
+
   return (
     <Box>
         <ul>
@@ -495,6 +499,12 @@ const handleCluster= async() =>{
                     <Button type="primary" onClick={() => handleSendXUDT()}>Send XUDT / RGB++</Button>
                 </div>
             </li>
+
+            {/*<li>*/}
+            {/*    <div>*/}
+            {/*        <Button type="primary" onClick={() => handleSendTransaction()}>Send Transaction</Button>*/}
+            {/*    </div>*/}
+            {/*</li>*/}
 
         </ul>
 
