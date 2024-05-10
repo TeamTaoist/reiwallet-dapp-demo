@@ -2,7 +2,8 @@ import { Button,Input } from 'antd';
 import {useCallback, useEffect, useState} from "react";
 import styled from "styled-components";
 import GlobalStyle from "./utils/GlobalStyle";
-import {formatUnit} from "@ckb-lumos/bi";
+import {formatUnit, parseUnit} from "@ckb-lumos/bi";
+import { commons,helpers, Indexer,config,BI} from "@ckb-lumos/lumos";
 
 const Box = styled.div`
     margin: 40px 100px ;
@@ -84,6 +85,7 @@ function App() {
     const [XUDTtype,setXUDTtype] = useState('type')
 
     const [PublicKey,setPublikey] = useState('')
+    const [rawHash,setRawHash] = useState('')
 
 
 
@@ -326,7 +328,39 @@ const handleCluster= async() =>{
         }
     }
 
-    const handleSendTransaction = () =>{
+    const handleSendTransaction = async() =>{
+        if(!feeRate)return;
+
+        config.initializeConfig(config.predefined.AGGRON4);
+
+        console.log(feeRate)
+
+        let fee = feeRate.median;
+        let feeFormat = BI.from(fee)
+
+        console.log(feeFormat)
+
+        const indexer = new Indexer("https://testnet.ckb.dev/indexer", "https://testnet.ckb.dev/rpc");
+        let txSkeleton = helpers.TransactionSkeleton({ cellProvider: indexer });
+
+        let amountFormat = parseUnit(amount, "ckb");
+
+
+        txSkeleton = await commons.common.transfer(txSkeleton, [address], sendTo, amountFormat);
+        txSkeleton = await commons.common.payFeeByFeeRate(txSkeleton, [address], feeFormat /*fee_rate*/);
+
+        // txSkeleton = commons.common.prepareSigningEntries(txSkeleton);
+        const txObj = helpers.transactionSkeletonToObject(txSkeleton)
+
+
+        try{
+            let rt = await window.ckb.request({method:"ckb_sendRawTransaction",data:{
+                txSkeleton:txObj
+                }})
+            setRawHash(rt)
+        }catch (e) {
+            console.error("==ckb_getPublicKey=",e)
+        }
 
     }
 
@@ -522,11 +556,16 @@ const handleCluster= async() =>{
                 </div>
             </li>
 
-            <li>
-                <div>
-                    <Button type="primary" onClick={() => handleSendTransaction()}>Send Transaction</Button>
-                </div>
-            </li>
+            {
+                feeRate && <li>
+                    <div>
+                        <Button type="primary" onClick={() => handleSendTransaction()}>Send Transaction</Button>
+
+                    </div>
+                    <div>{rawHash}</div>
+                </li>
+            }
+
 
         </ul>
 
