@@ -83,6 +83,8 @@ function App() {
     const [XUDTcodehash,setXUDTcodehash] = useState('0x25c29dc317811a6f6f3985a7a9ebc4838bd388d19d0feeecf0bcd60f6c0975bb')
     const [XUDTtype,setXUDTtype] = useState('type')
 
+    const [PublicKey,setPublikey] = useState('')
+
 
 
     const  accountChangesFun =  useCallback((data) => {
@@ -265,6 +267,8 @@ function App() {
         }
     }
 
+
+
 const handleCluster= async() =>{
         try{
             let rt = await window.ckb.request({method:"ckb_sendCluster",data:{
@@ -326,6 +330,16 @@ const handleCluster= async() =>{
 
     }
 
+    const getPublicKey = async() =>{
+        console.log("==getPublicKey==")
+        try{
+            let rt = await window.ckb.request({method:"ckb_getPublicKey"})
+            setPublikey(rt)
+        }catch (e) {
+            console.error("==ckb_getPublicKey=",e)
+        }
+    }
+
   return (
     <Box>
         <ul>
@@ -335,6 +349,14 @@ const handleCluster= async() =>{
                 </div>
 
                 <div>{address}</div>
+            </li>
+
+            <li>
+                <div>
+                    <Button type="primary" onClick={() => getPublicKey()}>get PublicKey</Button>
+                </div>
+
+                <div>{PublicKey}</div>
             </li>
             <li>
                 <div>
@@ -465,7 +487,7 @@ const handleCluster= async() =>{
                 </div>
                 <div>
                     <div className="flex"><span>Token</span><Input value={token} name="token"
-                                                                    onChange={(e) => handleInput(e)}/></div>
+                                                                   onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>{SUDTHash}</div>
                 <div>
@@ -484,15 +506,15 @@ const handleCluster= async() =>{
                 </div>
                 <div>
                     <div className="flex"><span>Args(OutPoint)</span><Input value={XUDTargs} name="XUDTargs"
-                                                                    onChange={(e) => handleInput(e)}/></div>
+                                                                            onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>
                     <div className="flex"><span>CodeHash(OutPoint)</span><Input value={XUDTcodehash} name="XUDTcodehash"
-                                                                    onChange={(e) => handleInput(e)}/></div>
+                                                                                onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>
                     <div className="flex"><span>Type(OutPoint)</span><Input value={XUDTtype} name="XUDTtype"
-                                                                    onChange={(e) => handleInput(e)}/></div>
+                                                                            onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>{XUDTHash}</div>
                 <div>
@@ -500,11 +522,11 @@ const handleCluster= async() =>{
                 </div>
             </li>
 
-            {/*<li>*/}
-            {/*    <div>*/}
-            {/*        <Button type="primary" onClick={() => handleSendTransaction()}>Send Transaction</Button>*/}
-            {/*    </div>*/}
-            {/*</li>*/}
+            <li>
+                <div>
+                    <Button type="primary" onClick={() => handleSendTransaction()}>Send Transaction</Button>
+                </div>
+            </li>
 
         </ul>
 
