@@ -1,4 +1,13 @@
-## 0.0.1 (2024-05-30)
+## [0.0.2](https://github.com/TeamTaoist/reiwallet-demo/compare/v0.0.1...v0.0.2) (2024-05-30)
+
+
+### Bug Fixes
+
+* add tips to install wallet ([0d438ee](https://github.com/TeamTaoist/reiwallet-demo/commit/0d438ee88d17e681459b79697a12db7d474f2c53))
+
+
+
+## [0.0.1](https://github.com/TeamTaoist/reiwallet-demo/compare/024dd27c592b6346e4749616f12e580072259614...v0.0.1) (2024-05-30)
 
 
 ### Bug Fixes
