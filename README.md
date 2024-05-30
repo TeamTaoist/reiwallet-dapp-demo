@@ -1,3 +1,3 @@
-# rgbpp-wallet-demo
+# REI-wallet-demo
 
-Demo page for RGB++ Wallet
+Demo page for REI Wallet
