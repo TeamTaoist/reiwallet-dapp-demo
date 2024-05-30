@@ -1,3 +1,12 @@
+## [0.0.3](https://github.com/TeamTaoist/reiwallet-demo/compare/v0.0.2...v0.0.3) (2024-05-30)
+
+
+### Bug Fixes
+
+* change repo name ([8c7354f](https://github.com/TeamTaoist/reiwallet-demo/commit/8c7354f53168089fc0ce94fbfd1aac1eacdfc27d))
+
+
+
 ## [0.0.2](https://github.com/TeamTaoist/reiwallet-demo/compare/v0.0.1...v0.0.2) (2024-05-30)
 
 
