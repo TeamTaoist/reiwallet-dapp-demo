@@ -13,6 +13,7 @@ const LogoBox = styled.div`
     gap: 10px;
     margin-bottom: 40px;
     border-bottom: 1px solid #ddd;
+ 
     a{
         margin-bottom: -15px;
         opacity: 0.5;
@@ -51,6 +52,7 @@ const Box = styled.div`
             min-width: 210px;
             background: #f2f2f2;
             text-align: center;
+            text-transform: capitalize;
         }
         
     }
@@ -62,6 +64,7 @@ const Box = styled.div`
     button{
         color: #000;
         min-width: 210px;
+        text-transform: capitalize;
     }
     input{
         min-width: 210px;
@@ -75,6 +78,38 @@ const BalanceBox = styled.div`
     gap: 30px;
     .tit{
         margin-right: 10px;
+    }
+`
+
+const TipsBox = styled.div`
+    width: 100%;
+    height: 98vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    box-sizing: border-box;
+    @font-face {
+        font-family:Roboto-Regular;
+        src: url(./fonts/Roboto-Regular.ttf)
+    }
+    a{
+        text-align: center;
+        text-decoration: none;
+        color: #000;
+    }
+    .tips{
+        opacity: 0.6;
+        font-size:20px;
+        font-family:Roboto-Regular,-apple-system,BlinkMacSystemFont,
+        "Segoe UI",Roboto,"Helvetica Neue",
+        Arial,sans-serif,"Apple Color Emoji",
+        "Segoe UI Emoji","Segoe UI Symbol";
+        background: #fff;
+        padding:10px 20px;
+        border-radius: 5px;
+        box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        border: 1px solid #f1f1f1;
     }
 `
 function App() {
@@ -120,6 +155,7 @@ function App() {
     },[])
 
     useEffect(()=>{
+        if(!window?.ckb) return;
         window.ckb.on('accountsChanged', accountChangesFun);
         window.ckb.on('chainChanged', function (data) {
             console.log("==chainChanged==",data)
@@ -328,15 +364,6 @@ const handleCluster= async() =>{
     }
     const handleSendXUDT = async() =>{
 
-        console.log({
-            amount:XUDTamount,
-            to:sendToXUDT,
-            token:{
-                args:XUDTargs,
-                code_hash:XUDTcodehash,
-                hash_type:XUDTtype
-            }
-        })
         try{
             let rt = await window.ckb.request({method:"ckb_sendXUDT",data:{
                     amount:XUDTamount,
@@ -359,12 +386,9 @@ const handleCluster= async() =>{
 
         config.initializeConfig(config.predefined.AGGRON4);
 
-        console.log(feeRate)
 
         let fee = feeRate.median;
         let feeFormat = BI.from(fee)
-
-        console.log(feeFormat)
 
         const indexer = new Indexer("https://testnet.ckb.dev/indexer", "https://testnet.ckb.dev/rpc");
         let txSkeleton = helpers.TransactionSkeleton({ cellProvider: indexer });
@@ -375,7 +399,6 @@ const handleCluster= async() =>{
         txSkeleton = await commons.common.transfer(txSkeleton, [address], sendTo, amountFormat);
         txSkeleton = await commons.common.payFeeByFeeRate(txSkeleton, [address], feeFormat /*fee_rate*/);
 
-        // txSkeleton = commons.common.prepareSigningEntries(txSkeleton);
         const txObj = helpers.transactionSkeletonToObject(txSkeleton)
 
 
@@ -391,7 +414,6 @@ const handleCluster= async() =>{
     }
 
     const getPublicKey = async() =>{
-        console.log("==getPublicKey==")
         try{
             let rt = await window.ckb.request({method:"ckb_getPublicKey"})
             setPublikey(rt)
@@ -399,11 +421,15 @@ const handleCluster= async() =>{
             console.error("==ckb_getPublicKey=",e)
         }
     }
-
-  return (
-      <ConfigProvider
-          theme={{
-              token: {
+    if(!window?.ckb) return <TipsBox>
+        <a href="https://reiwallet.io" target="_blank" rel="noreferrer"><img src={Logo} alt=""/>
+            <div className="tips">Please install REI Wallet</div>
+        </a>
+    </TipsBox>
+        return (
+        <ConfigProvider
+            theme={{
+                token: {
                   colorPrimary: 'rgb(0, 255, 157)',
                   fontFamily: "Roboto-Regular",
               },
@@ -421,7 +447,7 @@ const handleCluster= async() =>{
     <Box>
         <LogoBox>
             <img src={Logo} alt=""/>
-            <a href="https://reiwallet.io" target="_blank" rel="noreferrer">https://reiwallet.io/</a>
+            <a href="https://reiwallet.io" target="_blank" rel="noreferrer">reiwallet.io</a>
         </LogoBox>
         <ul>
             <li>

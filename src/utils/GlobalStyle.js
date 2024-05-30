@@ -7,8 +7,13 @@ const GlobalStyle = createGlobalStyle`
     padding: 0;
     margin: 0;
     overscroll-behavior: none;
+      
+      
   }
-
+  @font-face {
+      font-family:Roboto-Regular;
+      src: url(../fonts/Roboto-Regular.ttf)
+  }
 
   dl,dt,ul,li{
     padding: 0;
@@ -19,7 +24,7 @@ const GlobalStyle = createGlobalStyle`
     list-style: none;
   }
   * {
-    font-family:-apple-system,BlinkMacSystemFont,
+    font-family:Roboto-Regular,-apple-system,BlinkMacSystemFont,
     "Segoe UI",Roboto,"Helvetica Neue",
     Arial,sans-serif,"Apple Color Emoji",
     "Segoe UI Emoji","Segoe UI Symbol" ;
