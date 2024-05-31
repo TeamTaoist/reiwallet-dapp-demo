@@ -1,3 +1,12 @@
+## [0.0.5](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.4...v0.0.5) (2024-05-31)
+
+
+### Bug Fixes
+
+* add "vite-plugin-node-polyfills" ([c3fd848](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/c3fd8484d911d22e96c6eb65a5d3be8fa5e9b0f3))
+
+
+
 ## [0.0.4](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.3...v0.0.4) (2024-05-31)
 
 
