@@ -1,18 +1,34 @@
-# REI-wallet-demo
+# The simple dapp demo for REI Wallet
 
-Demo page for REI Wallet https://demo-app.reiwallet.io/
+It's a simple demo app to interact with REI Wallet. The deployed link is https://demo-app.reiwallet.io/
 
+More details about how to integrate REI Wallet with your dapp can be find [here](https://docs.reiwallet.io).
 
-## How to Run
+In this demo, you will see different methods to interact with REI Wallet.
 
-```
-npm run dev
-```
 
 ## Prepare
 Please install REI Wallet first.
 
 https://chromewebstore.google.com/detail/rei-wallet/jacbgghlojlggfgljfhhlcddicacmbek
+
+## Run locally
+
+You can run the demo locally. 
+
+Run `npm install` to install the packages needed.
+
+To start the demo, you can run below command👇
+```
+npm run dev
+```
+
+And you will see the page `http://localhost:5173/`. Open this webpage in your Chrome, then you can play it!
+
+
+## How to ask for help?
+
+If you have any question of problem with REI Wallet, please join the tg group https://t.me/reiwallet
 
 ## Usage
 
