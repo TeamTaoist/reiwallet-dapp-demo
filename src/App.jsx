@@ -5,14 +5,32 @@ import GlobalStyle from "./utils/GlobalStyle";
 import {formatUnit, parseUnit} from "@ckb-lumos/bi";
 import { commons,helpers, Indexer,config,BI} from "@ckb-lumos/lumos";
 import Logo from "./images/logo.png";
+import GithubImg from "./images/GitHub.png";
+import TelegramImg from "./images/Telegram.svg";
+
+const FlexBox = styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 40px;
+    .rhtTop{
+        display: flex;
+        justify-content: flex-end;
+        gap: 20px;
+        img{
+            width:30px;
+        }
+    }
+`
 
 
 const LogoBox = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-bottom: 40px;
-    border-bottom: 1px solid #ddd;
+
+
  
     a{
         margin-bottom: -15px;
@@ -445,10 +463,20 @@ const handleCluster= async() =>{
 
 
     <Box>
-        <LogoBox>
-            <img src={Logo} alt=""/>
-            <a href="https://reiwallet.io" target="_blank" rel="noreferrer">reiwallet.io</a>
-        </LogoBox>
+        <FlexBox>
+            <LogoBox>
+                <img src={Logo} alt=""/>
+                <a href="https://reiwallet.io" target="_blank" rel="noreferrer">reiwallet.io</a>
+
+            </LogoBox>
+            <div className="rhtTop">
+                <a href="https://github.com/TeamTaoist/reiwallet-dapp-demo" target="_blank" rel="noreferrer"><img src={GithubImg} alt=""/></a>
+                <a href="https://t.me/reiwallet" target="_blank" rel="noreferrer"><img src={TelegramImg} alt=""/></a>
+
+
+            </div>
+        </FlexBox>
+
         <ul>
             <li>
                 <div>
