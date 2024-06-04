@@ -1,3 +1,13 @@
+## [0.0.6](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.5...v0.0.6) (2024-06-04)
+
+
+### Bug Fixes
+
+* add link to home ([ba1699f](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/ba1699f9af7d9c6b4698a094a03bf583802f7297))
+* update lumos/spore sdk ([d137f1a](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/d137f1a2c268f0d2477a1a1bb5e3f4e4cf0b76c5))
+
+
+
 ## [0.0.5](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.4...v0.0.5) (2024-05-31)
 
 
