@@ -29,9 +29,6 @@ const LogoBox = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
-
-
- 
     a{
         margin-bottom: -15px;
         opacity: 0.5;
@@ -128,6 +125,15 @@ const TipsBox = styled.div`
         border-radius: 5px;
         box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         border: 1px solid #f1f1f1;
+    }
+    .Btm{
+        display: flex;
+        align-content: center;
+        gap: 20px;
+        margin-top: 30px;
+        img{
+            width:40px;
+        }
     }
 `
 function App() {
@@ -443,17 +449,22 @@ const handleCluster= async() =>{
         <a href="https://reiwallet.io" target="_blank" rel="noreferrer"><img src={Logo} alt=""/>
             <div className="tips">Please install REI Wallet</div>
         </a>
+        <div className="Btm">
+            <a href="https://github.com/TeamTaoist/reiwallet-dapp-demo" target="_blank" rel="noreferrer"><img
+                src={GithubImg} alt=""/></a>
+            <a href="https://t.me/reiwallet" target="_blank" rel="noreferrer"><img src={TelegramImg} alt=""/></a>
+        </div>
     </TipsBox>
-        return (
+    return (
         <ConfigProvider
             theme={{
                 token: {
-                  colorPrimary: 'rgb(0, 255, 157)',
-                  fontFamily: "Roboto-Regular",
-              },
-              components:{
-                  Button: {
-                      colorPrimary: 'rgb(0, 255, 157)',
+                    colorPrimary: 'rgb(0, 255, 157)',
+                    fontFamily: "Roboto-Regular",
+                },
+                components: {
+                    Button: {
+                        colorPrimary: 'rgb(0, 255, 157)',
                       paddingInlineLG:"30px",
                       borderRadiusLG:"5px"
                   }
@@ -472,8 +483,6 @@ const handleCluster= async() =>{
             <div className="rhtTop">
                 <a href="https://github.com/TeamTaoist/reiwallet-dapp-demo" target="_blank" rel="noreferrer"><img src={GithubImg} alt=""/></a>
                 <a href="https://t.me/reiwallet" target="_blank" rel="noreferrer"><img src={TelegramImg} alt=""/></a>
-
-
             </div>
         </FlexBox>
 
