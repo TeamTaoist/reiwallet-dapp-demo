@@ -1,3 +1,12 @@
+## [0.0.9](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.8...v0.0.9) (2024-06-05)
+
+
+### Bug Fixes
+
+* wrong path for fonts ([2b63485](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/2b63485cc5852c2db65ab9a2feb0d8f37d864669))
+
+
+
 ## [0.0.8](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.7...v0.0.8) (2024-06-05)
 
 
