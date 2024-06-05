@@ -1,7 +1,7 @@
 import { Button,Input,ConfigProvider } from 'antd';
 import {useCallback, useEffect, useState} from "react";
 import styled from "styled-components";
-import GlobalStyle from "./GlobalStyle";
+import GlobalStyle from "./utils/GlobalStyle";
 import {formatUnit, parseUnit} from "@ckb-lumos/bi";
 import { commons,helpers, Indexer,config,BI} from "@ckb-lumos/lumos";
 import Logo from "./images/logo.png";
@@ -106,7 +106,7 @@ const TipsBox = styled.div`
     box-sizing: border-box;
     @font-face {
         font-family:Roboto-Regular;
-        src: url(../public/fonts/Roboto-Regular.ttf)
+        src: local('Roboto-Regular'), url(./fonts/Roboto-Regular.ttf)
     }
     a{
         text-align: center;

@@ -12,7 +12,7 @@ const GlobalStyle = createGlobalStyle`
   }
   @font-face {
       font-family:Roboto-Regular;
-      src: url(../public/fonts/Roboto-Regular.ttf)
+      src: local('Roboto-Regular'), url(../fonts/Roboto-Regular.ttf)
   }
 
   dl,dt,ul,li{
