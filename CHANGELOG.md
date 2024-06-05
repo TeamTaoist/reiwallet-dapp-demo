@@ -1,3 +1,12 @@
+## [0.0.8](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.7...v0.0.8) (2024-06-05)
+
+
+### Bug Fixes
+
+* missing fonts ([e4e36da](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/e4e36dab282b68fdb5c034355d1b6fb28d319ed3))
+
+
+
 ## [0.0.7](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.6...v0.0.7) (2024-06-04)
 
 
