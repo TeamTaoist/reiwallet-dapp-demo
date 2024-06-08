@@ -171,7 +171,17 @@ function App() {
 
     const [PublicKey,setPublikey] = useState('')
     const [rawHash,setRawHash] = useState('')
+    const [showTips,setShowTips] = useState(true)
 
+
+    useEffect(() => {
+        if(!window?.ckb) {
+            setShowTips(true)
+        }else{
+            setShowTips(false)
+        }
+
+    }, [window?.ckb]);
 
 
     const  accountChangesFun =  useCallback((data) => {
@@ -445,7 +455,7 @@ const handleCluster= async() =>{
             console.error("==ckb_getPublicKey=",e)
         }
     }
-    if(!window?.ckb) return <TipsBox>
+    if(showTips) return <TipsBox>
         <a href="https://reiwallet.io" target="_blank" rel="noreferrer"><img src={Logo} alt=""/>
             <div className="tips">Please install REI Wallet</div>
         </a>
