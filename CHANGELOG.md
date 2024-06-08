@@ -1,3 +1,12 @@
+## [0.0.10](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.9...v0.0.10) (2024-06-08)
+
+
+### Bug Fixes
+
+* update tips with no Rei wallet ([27cfa57](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/27cfa57e982ef1b67d936c276c9d10c8a942bcde))
+
+
+
 ## [0.0.9](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.8...v0.0.9) (2024-06-05)
 
 
