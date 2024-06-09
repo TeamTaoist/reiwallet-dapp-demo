@@ -1,3 +1,12 @@
+## [0.0.12](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.11...v0.0.12) (2024-06-09)
+
+
+### Bug Fixes
+
+* add tips to  response ([3332399](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/3332399ea62d36434ee2cbff61f0aec3a84407c5))
+
+
+
 ## [0.0.11](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.10...v0.0.11) (2024-06-09)
 
 
