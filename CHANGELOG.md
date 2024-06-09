@@ -1,3 +1,12 @@
+## [0.0.11](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.10...v0.0.11) (2024-06-09)
+
+
+### Bug Fixes
+
+* update fee rate format ([0631c77](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/0631c7707260cc713d2ea8a941992275c28825bb))
+
+
+
 ## [0.0.10](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.9...v0.0.10) (2024-06-08)
 
 
