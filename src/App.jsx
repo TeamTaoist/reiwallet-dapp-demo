@@ -1,4 +1,4 @@
-import { Button,Input,ConfigProvider } from 'antd';
+import { App as AppAntd,Button,Input,ConfigProvider } from 'antd';
 import {useCallback, useEffect, useState} from "react";
 import styled from "styled-components";
 import GlobalStyle from "./utils/GlobalStyle";
@@ -180,6 +180,8 @@ function App() {
     const [showTips,setShowTips] = useState(true)
     const [isConnected,setIsConnected] = useState('')
 
+    const {  notification } = AppAntd.useApp();
+
 
     useEffect(() => {
         if(!window?.ckb) {
@@ -210,6 +212,11 @@ function App() {
             setAddress(addr)
         }catch (e) {
             console.error("==connect=",e)
+
+            notification.error({
+                message: "Connect wallet",
+                description:e
+            });
         }
 
     }
@@ -224,6 +231,11 @@ function App() {
             })
         }catch (e) {
             console.error("==getBalance=",e)
+
+            notification.error({
+                message: "Get Balance",
+                description:e
+            });
         }
     }
 
@@ -234,6 +246,11 @@ function App() {
             setSignature(rt);
         }catch (e) {
             console.error("==signMessage=",e)
+
+            notification.error({
+                message: "Sign Message",
+                description:e
+            });
         }
 
     }
@@ -248,6 +265,11 @@ function App() {
             setTxhash(rt);
         }catch (e) {
             console.error("==ckb_sendCKB=",e)
+
+            notification.error({
+                message: "Sign Message",
+                description:e
+            });
         }
     }
 
@@ -324,6 +346,10 @@ function App() {
             console.log(rt)
         }catch (e) {
             console.error("==ckb_sendCKB=",e)
+            notification.error({
+                message: "switch Network",
+                description:e
+            });
         }
     }
 
@@ -332,7 +358,11 @@ function App() {
             let rt = await window.ckb.request({method:"ckb_getFeeRate"})
             setFeeRate(rt)
         }catch (e) {
-            console.error("==ckb_sendCKB=",e)
+            console.error("==getFeeRate=",e)
+            notification.error({
+                message: "Fee Rate",
+                description:e
+            });
         }
     }
 
@@ -343,17 +373,22 @@ function App() {
             setIsConnected(rt)
 
         }catch (e) {
-            console.error("==ckb_sendCKB=",e)
+            console.error("==getConnected=",e)
+            notification.error({
+                message: "Connected",
+                description:e
+            });
         }
     }
 
     const offAccount = () =>{
-        try{
-           window.ckb.off('accountsChanged', accountChangesFun)
-            
-        }catch (e) {
-            console.error("==ckb_sendCKB=",e)
-        }
+
+       window.ckb.off('accountsChanged', accountChangesFun)
+        notification.success({
+            message: "off Account Successful",
+        });
+
+
     }
 
     const handleSendDob = async() =>{
@@ -368,7 +403,12 @@ function App() {
 
             setDobHash(rt);
         }catch (e) {
-            console.error("==ckb_sendDOB=",e)
+            console.error("==SendDob=",e)
+
+            notification.error({
+                message: "Send Dob",
+                description:e
+            });
         }
     }
 
@@ -387,22 +427,30 @@ const handleCluster= async() =>{
             setClusterTx(rt);
         }catch (e) {
             console.error("==ckb_sendCluster=",e)
+            notification.error({
+                message: "Send Cluster",
+                description:e
+            });
         }
     }
 
-    const handleSendSUDT = async() =>{
-        try{
-            let rt = await window.ckb.request({method:"ckb_sendSUDT",data:{
-                    amount:SUDTamount,
-                    to:sendToSUDT,
-                    token
-                }})
-
-            setSUDThash(rt);
-        }catch (e) {
-            console.error("==ckb_sendSUDT=",e)
-        }
-    }
+    // const handleSendSUDT = async() =>{
+    //     try{
+    //         let rt = await window.ckb.request({method:"ckb_sendSUDT",data:{
+    //                 amount:SUDTamount,
+    //                 to:sendToSUDT,
+    //                 token
+    //             }})
+    //
+    //         setSUDThash(rt);
+    //     }catch (e) {
+    //         console.error("==ckb_sendSUDT=",e)
+    //         notification.error({
+    //             message: "Send Cluster",
+    //             description:e
+    //         });
+    //     }
+    // }
     const handleSendXUDT = async() =>{
 
         try{
@@ -419,6 +467,11 @@ const handleCluster= async() =>{
             setXUDThash(rt);
         }catch (e) {
             console.error("==ckb_sendXUDT=",e)
+
+            notification.error({
+                message: "Send XUDT",
+                description:e
+            });
         }
     }
 
@@ -449,7 +502,12 @@ const handleCluster= async() =>{
                 }})
             setRawHash(rt)
         }catch (e) {
-            console.error("==ckb_getPublicKey=",e)
+            console.error("==Send Transaction=",e)
+
+            notification.error({
+                message: "Send Transaction",
+                description:e
+            });
         }
 
     }
@@ -460,6 +518,10 @@ const handleCluster= async() =>{
             setPublikey(rt)
         }catch (e) {
             console.error("==ckb_getPublicKey=",e)
+            notification.error({
+                message: "Public key",
+                description:e
+            });
         }
     }
     if(showTips) return <TipsBox>
@@ -473,6 +535,7 @@ const handleCluster= async() =>{
         </div>
     </TipsBox>
     return (
+
         <ConfigProvider
             theme={{
                 token: {
@@ -638,25 +701,25 @@ const handleCluster= async() =>{
                 </div>
             </li>
 
-            <li className="noFlex">
-                <div>
-                    <div className="flex"><span>Transfer To</span><Input value={sendToSUDT} name="sendToSUDT"  size="large"
-                                                                         onChange={(e) => handleInput(e)}/></div>
+            {/*<li className="noFlex">*/}
+            {/*    <div>*/}
+            {/*        <div className="flex"><span>Transfer To</span><Input value={sendToSUDT} name="sendToSUDT"  size="large"*/}
+            {/*                                                             onChange={(e) => handleInput(e)}/></div>*/}
 
-                </div>
-                <div>
-                    <div className="flex"><span>Amount</span><Input value={SUDTamount} name="SUDTamount"  size="large"
-                                                                    onChange={(e) => handleInput(e)}/></div>
-                </div>
-                <div>
-                    <div className="flex"><span>Token</span><Input value={token} name="token"  size="large"
-                                                                   onChange={(e) => handleInput(e)}/></div>
-                </div>
-                <div>{SUDTHash}</div>
-                <div>
-                    <Button type="primary" onClick={() => handleSendSUDT()} size="large">Send SUDT</Button>
-                </div>
-            </li>
+            {/*    </div>*/}
+            {/*    <div>*/}
+            {/*        <div className="flex"><span>Amount</span><Input value={SUDTamount} name="SUDTamount"  size="large"*/}
+            {/*                                                        onChange={(e) => handleInput(e)}/></div>*/}
+            {/*    </div>*/}
+            {/*    <div>*/}
+            {/*        <div className="flex"><span>Token</span><Input value={token} name="token"  size="large"*/}
+            {/*                                                       onChange={(e) => handleInput(e)}/></div>*/}
+            {/*    </div>*/}
+            {/*    <div>{SUDTHash}</div>*/}
+            {/*    <div>*/}
+            {/*        <Button type="primary" onClick={() => handleSendSUDT()} size="large">Send SUDT</Button>*/}
+            {/*    </div>*/}
+            {/*</li>*/}
             <li className="noFlex">
                 <div>
                     <div className="flex"><span>Transfer To</span><Input value={sendToXUDT} name="sendToXUDT"  size="large"
@@ -700,6 +763,7 @@ const handleCluster= async() =>{
         <GlobalStyle/>
     </Box>
       </ConfigProvider>
+
   )
 }
 
