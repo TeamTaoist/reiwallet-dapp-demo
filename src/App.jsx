@@ -22,6 +22,7 @@ const FlexBox = styled.div`
             width:30px;
         }
     }
+
 `
 
 
@@ -83,6 +84,11 @@ const Box = styled.div`
     }
     input{
         min-width: 210px;
+    }
+    .flex10{
+        display: flex;
+        align-items: center;
+        gap: 20px;
     }
 `
 
@@ -172,6 +178,7 @@ function App() {
     const [PublicKey,setPublikey] = useState('')
     const [rawHash,setRawHash] = useState('')
     const [showTips,setShowTips] = useState(true)
+    const [isConnected,setIsConnected] = useState('')
 
 
     useEffect(() => {
@@ -333,6 +340,7 @@ function App() {
         try{
             let rt = await window.ckb.isConnected()
             console.log(rt)
+            setIsConnected(rt)
 
         }catch (e) {
             console.error("==ckb_sendCKB=",e)
@@ -342,8 +350,7 @@ function App() {
     const offAccount = () =>{
         try{
            window.ckb.off('accountsChanged', accountChangesFun)
-            console.log("---offAccount---")
-
+            
         }catch (e) {
             console.error("==ckb_sendCKB=",e)
         }
@@ -574,15 +581,16 @@ const handleCluster= async() =>{
                 <div>
                     <Button type="primary" onClick={() => getFeeRate()} size="large">Fee rate</Button>
                 </div>
-                <div>
-                    <span>mean:{feeRate?.mean ?? 0}</span> --
-                    <span>median:{feeRate?.median ?? 0}</span>
+                <div className="flex10">
+                    <span>mean:{Number(feeRate?.mean?? 0) }</span>
+                    <span>median:{Number(feeRate?.median?? 0) }</span>
                 </div>
             </li>
             <li>
                 <div>
                     <Button type="primary" onClick={() => getConnected()} size="large">IsConnected</Button>
                 </div>
+                <div>{isConnected!=="" && JSON.stringify(isConnected)}</div>
             </li>
             <li>
                 <div>
@@ -591,7 +599,7 @@ const handleCluster= async() =>{
             </li>
 
             <li className="noFlex">
-                <div>
+            <div>
                     <div className="flex"><span>Transfer To</span><Input value={sendDOBTo} name="sendDOBTo"  size="large"
                                                                          onChange={(e) => handleInput(e)}/></div>
 
