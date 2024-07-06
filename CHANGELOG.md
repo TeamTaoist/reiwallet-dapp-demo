@@ -1,3 +1,12 @@
+# [0.1.0](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.12...v0.1.0) (2024-07-06)
+
+
+### Features
+
+* add sign raw transaction ([c796e87](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/c796e87ae8f6bb1ae108e5d1827bcf7f11774dc6))
+
+
+
 ## [0.0.12](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.0.11...v0.0.12) (2024-06-09)
 
 
