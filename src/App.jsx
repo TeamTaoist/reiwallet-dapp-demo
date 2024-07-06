@@ -22,6 +22,7 @@ const FlexBox = styled.div`
             width:30px;
         }
     }
+ 
 
 `
 
@@ -58,6 +59,15 @@ const Box = styled.div`
              
             }
         }
+    }
+    .jsonBg{
+        background: #f5f5f5;
+        padding: 20px;
+        white-space: pre-wrap;
+        height: 300px;
+        overflow-y: auto;
+        line-height: 1.5em;
+        word-break: break-all;
     }
     .flex{
         display: flex;
@@ -177,6 +187,7 @@ function App() {
 
     const [PublicKey,setPublikey] = useState('')
     const [rawHash,setRawHash] = useState('')
+    const [rawSignObj,setRawSignObj] = useState('')
     const [showTips,setShowTips] = useState(true)
     const [isConnected,setIsConnected] = useState('')
 
@@ -475,6 +486,46 @@ const handleCluster= async() =>{
         }
     }
 
+    const handleSignTransaction = async () =>{
+
+        if(!feeRate)return;
+
+        config.initializeConfig(config.predefined.AGGRON4);
+
+
+        let fee = feeRate.median;
+        let feeFormat = BI.from(fee)
+
+        const indexer = new Indexer("https://testnet.ckb.dev/indexer", "https://testnet.ckb.dev/rpc");
+        let txSkeleton = helpers.TransactionSkeleton({ cellProvider: indexer });
+
+        let amountFormat = parseUnit(amount, "ckb");
+
+
+        txSkeleton = await commons.common.transfer(txSkeleton, [address], sendTo, amountFormat);
+        txSkeleton = await commons.common.payFeeByFeeRate(txSkeleton, [address], feeFormat /*fee_rate*/);
+
+        const txObj = helpers.transactionSkeletonToObject(txSkeleton)
+
+        console.log(txObj)
+
+
+        try{
+            let rt = await window.ckb.request({method:"ckb_signRawTransaction",data:{
+                    txSkeleton:txObj
+                }})
+            setRawSignObj(rt)
+        }catch (e) {
+            console.error("==Send Transaction=",e)
+
+            notification.error({
+                message: "Send Transaction",
+                description:e
+            });
+        }
+
+    }
+
     const handleSendTransaction = async() =>{
         if(!feeRate)return;
 
@@ -494,6 +545,9 @@ const handleCluster= async() =>{
         txSkeleton = await commons.common.payFeeByFeeRate(txSkeleton, [address], feeFormat /*fee_rate*/);
 
         const txObj = helpers.transactionSkeletonToObject(txSkeleton)
+
+        console.log(txObj)
+
 
 
         try{
@@ -613,14 +667,14 @@ const handleCluster= async() =>{
 
             <li className="noFlex">
                 <div>
-                    <div className="flex"><span>Transfer To</span><Input value={sendTo} name="sendTo"  size="large"
+                    <div className="flex"><span>Transfer To</span><Input value={sendTo} name="sendTo" size="large"
                                                                          onChange={(e) => handleInput(e)}/></div>
 
                 </div>
                 <div>
                     <div className="flex"><span>Amount</span>
-                        <Input value={amount} name="amount"  size="large"
-                                                                    onChange={(e) => handleInput(e)}/></div>
+                        <Input value={amount} name="amount" size="large"
+                               onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>{txHash}</div>
                 <div>
@@ -645,15 +699,15 @@ const handleCluster= async() =>{
                     <Button type="primary" onClick={() => getFeeRate()} size="large">Fee rate</Button>
                 </div>
                 <div className="flex10">
-                    <span>mean:{Number(feeRate?.mean?? 0) }</span>
-                    <span>median:{Number(feeRate?.median?? 0) }</span>
+                    <span>mean:{Number(feeRate?.mean ?? 0)}</span>
+                    <span>median:{Number(feeRate?.median ?? 0)}</span>
                 </div>
             </li>
             <li>
                 <div>
                     <Button type="primary" onClick={() => getConnected()} size="large">IsConnected</Button>
                 </div>
-                <div>{isConnected!=="" && JSON.stringify(isConnected)}</div>
+                <div>{isConnected !== "" && JSON.stringify(isConnected)}</div>
             </li>
             <li>
                 <div>
@@ -662,42 +716,47 @@ const handleCluster= async() =>{
             </li>
 
             <li className="noFlex">
-            <div>
-                    <div className="flex"><span>Transfer To</span><Input value={sendDOBTo} name="sendDOBTo"  size="large"
+                <div>
+                    <div className="flex"><span>Transfer To</span><Input value={sendDOBTo} name="sendDOBTo" size="large"
                                                                          onChange={(e) => handleInput(e)}/></div>
 
                 </div>
                 <div>
-                    <div className="flex"><span>Index (OutPoint)</span><Input value={txIndex} name="txIndex"  size="large"
+                    <div className="flex"><span>Index (OutPoint)</span><Input value={txIndex} name="txIndex"
+                                                                              size="large"
                                                                               onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>
-                    <div className="flex"><span>TxHash (OutPoint)</span><Input value={txDobHash} name="txDobHash"  size="large"
+                    <div className="flex"><span>TxHash (OutPoint)</span><Input value={txDobHash} name="txDobHash"
+                                                                               size="large"
                                                                                onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>{DobHash}</div>
                 <div>
-                    <Button type="primary" onClick={() => handleSendDob()}  size="large">Send DOB</Button>
+                    <Button type="primary" onClick={() => handleSendDob()} size="large">Send DOB</Button>
                 </div>
             </li>
 
             <li className="noFlex">
                 <div>
-                    <div className="flex"><span>Transfer To</span><Input value={sendClusterTo} name="sendClusterTo"  size="large"
+                    <div className="flex"><span>Transfer To</span><Input value={sendClusterTo} name="sendClusterTo"
+                                                                         size="large"
                                                                          onChange={(e) => handleInput(e)}/></div>
 
                 </div>
                 <div>
-                    <div className="flex"><span>Index (OutPoint)</span><Input value={ClusterIndex} name="ClusterIndex"  size="large"
+                    <div className="flex"><span>Index (OutPoint)</span><Input value={ClusterIndex} name="ClusterIndex"
+                                                                              size="large"
                                                                               onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>
-                    <div className="flex"><span>TxHash (OutPoint)</span><Input value={ClusterHash} name="ClusterHash"  size="large"
+                    <div className="flex"><span>TxHash (OutPoint)</span><Input value={ClusterHash} name="ClusterHash"
+                                                                               size="large"
                                                                                onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>{ClusterTx}</div>
                 <div>
-                    <Button type="primary" onClick={() => handleCluster()}  size="large">Send Cluster</Button>
+                    <Button type="primary" onClick={() => handleCluster()} size="large">Send Cluster</Button>
                 </div>
             </li>
 
@@ -722,49 +781,61 @@ const handleCluster= async() =>{
             {/*</li>*/}
             <li className="noFlex">
                 <div>
-                    <div className="flex"><span>Transfer To</span><Input value={sendToXUDT} name="sendToXUDT"  size="large"
+                    <div className="flex"><span>Transfer To</span><Input value={sendToXUDT} name="sendToXUDT"
+                                                                         size="large"
                                                                          onChange={(e) => handleInput(e)}/></div>
 
                 </div>
                 <div>
-                    <div className="flex"><span>Amount</span><Input value={XUDTamount} name="XUDTamount"  size="large"
+                    <div className="flex"><span>Amount</span><Input value={XUDTamount} name="XUDTamount" size="large"
                                                                     onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>
-                    <div className="flex"><span>Args(OutPoint)</span><Input value={XUDTargs} name="XUDTargs"  size="large"
+                    <div className="flex"><span>Args(OutPoint)</span><Input value={XUDTargs} name="XUDTargs"
+                                                                            size="large"
                                                                             onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>
-                    <div className="flex"><span>CodeHash(OutPoint)</span><Input value={XUDTcodehash} name="XUDTcodehash"  size="large"
+                    <div className="flex"><span>CodeHash(OutPoint)</span><Input value={XUDTcodehash} name="XUDTcodehash"
+                                                                                size="large"
                                                                                 onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>
-                    <div className="flex"><span>Type(OutPoint)</span><Input value={XUDTtype} name="XUDTtype"  size="large"
+                    <div className="flex"><span>Type(OutPoint)</span><Input value={XUDTtype} name="XUDTtype"
+                                                                            size="large"
                                                                             onChange={(e) => handleInput(e)}/></div>
                 </div>
                 <div>{XUDTHash}</div>
                 <div>
-                    <Button type="primary" onClick={() => handleSendXUDT()}  size="large">Send XUDT / RGB++</Button>
+                    <Button type="primary" onClick={() => handleSendXUDT()} size="large">Send XUDT / RGB++</Button>
                 </div>
             </li>
 
-           <li>
-                    <div>
-                        <Button type="primary" onClick={() => handleSendTransaction()} disabled={!feeRate}  size="large">Send Transaction</Button>
+            <li>
+                <div>
+                    <Button type="primary" onClick={() => handleSignTransaction()} disabled={!feeRate} size="large">Sign transaction</Button>
 
-                    </div>
-                    <div>{rawHash}</div>
-                </li>
+                </div>
+                <div className="jsonBg">{JSON.stringify(rawSignObj,null,4)}</div>
+            </li>
 
+            <li>
+                <div>
+                    <Button type="primary" onClick={() => handleSendTransaction()} disabled={!feeRate} size="large">Send
+                        Transaction</Button>
+
+                </div>
+                <div>{rawHash}</div>
+            </li>
 
 
         </ul>
 
         <GlobalStyle/>
     </Box>
-      </ConfigProvider>
+        </ConfigProvider>
 
-  )
+    )
 }
 
 export default App
