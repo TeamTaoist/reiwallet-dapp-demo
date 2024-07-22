@@ -212,6 +212,7 @@ function App() {
         if(!window?.ckb) return;
         window.ckb.on('accountsChanged', accountChangesFun);
         window.ckb.on('chainChanged', function (data) {
+
             console.log("==chainChanged==",data)
         });
 
@@ -487,6 +488,7 @@ const handleCluster= async() =>{
     }
 
     const handleSignTransaction = async () =>{
+        await getFeeRate();
 
         if(!feeRate)return;
 
@@ -527,6 +529,8 @@ const handleCluster= async() =>{
     }
 
     const handleSendTransaction = async() =>{
+
+        await getFeeRate();
         if(!feeRate)return;
 
         config.initializeConfig(config.predefined.AGGRON4);
@@ -813,7 +817,7 @@ const handleCluster= async() =>{
 
             <li>
                 <div>
-                    <Button type="primary" onClick={() => handleSignTransaction()} disabled={!feeRate} size="large">Sign transaction</Button>
+                    <Button type="primary" onClick={() => handleSignTransaction()}  size="large">Sign transaction</Button>
 
                 </div>
                 <div className="jsonBg">{JSON.stringify(rawSignObj,null,4)}</div>
@@ -821,7 +825,7 @@ const handleCluster= async() =>{
 
             <li>
                 <div>
-                    <Button type="primary" onClick={() => handleSendTransaction()} disabled={!feeRate} size="large">Send
+                    <Button type="primary" onClick={() => handleSendTransaction()}  size="large">Send
                         Transaction</Button>
 
                 </div>

@@ -178,9 +178,9 @@ args: XUDT's args(RPC)
 code_hash: XUDT's code_hash(RPC)
 hash_type: XUDT's hash_type(RPC)
 
-### 15. Send Raw Transaction
+### 15. Sign Raw Transaction
 ```
-await window.ckb.request({method:"ckb_sendRawTransaction",data:{
+await window.ckb.request({method:"ckb_signRawTransaction",data:{
     txSkeleton:{...}
 }})
 
@@ -256,4 +256,15 @@ TxSkeleton format is the same with txSkeleton that generated from ckb lumos:
     "inputSinces":{}
 }
 
+```
+
+### 16. Send Raw Transaction
+```
+await window.ckb.request({method:"ckb_sendRawTransaction",data:{
+    txSkeleton:{...}
+}})
+
+```
+```
+TxSkeleton format is the same  as above
 ```
