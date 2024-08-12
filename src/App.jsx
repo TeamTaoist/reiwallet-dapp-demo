@@ -254,7 +254,6 @@ function App() {
     const testSign = async() =>{
         try{
             let rt = await window.ckb.request({method:"ckb_signMessage",data:{message}})
-            console.log("======",rt)
             setSignature(rt);
         }catch (e) {
             console.error("==signMessage=",e)
@@ -489,10 +488,16 @@ const handleCluster= async() =>{
 
     const handleSignTransaction = async () =>{
         await getFeeRate();
+        await getNetwork();
 
         if(!feeRate)return;
 
-        config.initializeConfig(config.predefined.AGGRON4);
+        if(network === "mainnet"){
+            config.initializeConfig(config.predefined.LINA);
+        }else{
+            config.initializeConfig(config.predefined.AGGRON4);
+        }
+
 
 
         let fee = feeRate.median;
@@ -531,9 +536,15 @@ const handleCluster= async() =>{
     const handleSendTransaction = async() =>{
 
         await getFeeRate();
+        await getNetwork();
         if(!feeRate)return;
 
-        config.initializeConfig(config.predefined.AGGRON4);
+
+        if(network === "mainnet"){
+            config.initializeConfig(config.predefined.LINA);
+        }else{
+            config.initializeConfig(config.predefined.AGGRON4);
+        }
 
 
         let fee = feeRate.median;

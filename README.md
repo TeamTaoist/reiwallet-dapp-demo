@@ -60,7 +60,7 @@ address: Your ckb address
 ```
  await window.ckb.request({method:"ckb_signMessage",data:{message:"Hello REI Wallet"}})
 ```
-message: This is message that wants to sign with rei wallet
+message: This is the message that needs to be signed, which can be plain text or a hex string starting with 0x. If it is not a hex string starting with 0x, its hash value will be calculated and then signed.
 
 
 
