@@ -1,3 +1,12 @@
+## [0.1.3](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.1.2...v0.1.3) (2024-08-12)
+
+
+### Bug Fixes
+
+* add verify message ([8ec85cd](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/8ec85cdd205fdc4294ecb4fa01282c8d93f0a539))
+
+
+
 ## [0.1.2](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.1.1...v0.1.2) (2024-08-12)
 
 
