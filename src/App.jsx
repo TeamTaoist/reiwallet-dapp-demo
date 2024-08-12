@@ -3,10 +3,12 @@ import {useCallback, useEffect, useState} from "react";
 import styled from "styled-components";
 import GlobalStyle from "./utils/GlobalStyle";
 import {formatUnit, parseUnit} from "@ckb-lumos/bi";
-import { commons,helpers, Indexer,config,BI} from "@ckb-lumos/lumos";
+
+import { commons,helpers, Indexer,config,BI,hd } from "@ckb-lumos/lumos";
 import Logo from "./images/logo.png";
 import GithubImg from "./images/GitHub.png";
 import TelegramImg from "./images/Telegram.svg";
+import {ckbHash} from "@ckb-lumos/base/lib/utils.js";
 
 const FlexBox = styled.div`
     display: flex;
@@ -152,6 +154,15 @@ const TipsBox = styled.div`
         }
     }
 `
+
+const FlexRhtBox = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+`
+
+
+
 function App() {
 
     const [address,setAddress] = useState('')
@@ -190,6 +201,8 @@ function App() {
     const [rawSignObj,setRawSignObj] = useState('')
     const [showTips,setShowTips] = useState(true)
     const [isConnected,setIsConnected] = useState('')
+
+    const [signValid,setSignValid] = useState("")
 
     const {  notification } = AppAntd.useApp();
 
@@ -263,8 +276,34 @@ function App() {
                 description:e
             });
         }
+    }
+
+
+    const verifyMessage = async() =>{
+
+        console.log(message)
+        let newMessage
+        if (!/^0x([0-9a-fA-F][0-9a-fA-F])*$/.test(message)) {
+
+            const buffer = Buffer.from( message, 'utf-8')
+            newMessage = ckbHash(buffer);
+            // hasher.update(nM);
+            // newMessage = hasher.digestHex().toString();
+        }else{
+            newMessage = message;
+        }
+
+        console.log("newMessage",newMessage)
+
+       let rt= hd.key.recoverFromSignature(newMessage,signature)
+
+        let publickey = await window.ckb.request({method:"ckb_getPublicKey"})
+        setSignValid(publickey === rt?"valid":"invalid")
+
+        console.log(rt)
 
     }
+
 
     const handleSend = async() =>{
         try{
@@ -674,14 +713,19 @@ const handleCluster= async() =>{
                 <div>
                     <Input type="text" name="message" value={message} onChange={(e) => handleInput(e)} size="large"/>
                 </div>
-                <div>
+                <FlexRhtBox>
                     <Button type="primary" onClick={() => testSign()} size="large">sign message</Button>
-                </div>
+                    <Button type="primary" disabled={!signature} onClick={() => verifyMessage()} size="large">verify message</Button>
+                </FlexRhtBox>
+
+            </li>
+            <li className="noFlex">
                 <div className="sig">{signature}</div>
+                <div className="verify">{signValid}</div>
             </li>
 
             <li className="noFlex">
-                <div>
+            <div>
                     <div className="flex"><span>Transfer To</span><Input value={sendTo} name="sendTo" size="large"
                                                                          onChange={(e) => handleInput(e)}/></div>
 
