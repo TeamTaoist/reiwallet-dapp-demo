@@ -281,19 +281,8 @@ function App() {
 
     const verifyMessage = async() =>{
 
-        console.log(message)
-        let newMessage
-        if (!/^0x([0-9a-fA-F][0-9a-fA-F])*$/.test(message)) {
-
-            const buffer = Buffer.from( message, 'utf-8')
-            newMessage = ckbHash(buffer);
-            // hasher.update(nM);
-            // newMessage = hasher.digestHex().toString();
-        }else{
-            newMessage = message;
-        }
-
-        console.log("newMessage",newMessage)
+        const buffer = Buffer.from( `Nervos Message:${message}`, 'utf-8')
+        const newMessage = ckbHash(buffer);
 
        let rt= hd.key.recoverFromSignature(newMessage,signature)
 
