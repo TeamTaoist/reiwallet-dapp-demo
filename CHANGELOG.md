@@ -1,3 +1,12 @@
+## [0.1.4](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.1.3...v0.1.4) (2024-08-15)
+
+
+### Bug Fixes
+
+* add prefix to sign message ([0815d1a](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/0815d1a0df2b47219e0d0c6764e90ded704f7e90))
+
+
+
 ## [0.1.3](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.1.2...v0.1.3) (2024-08-12)
 
 
