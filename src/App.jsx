@@ -547,7 +547,8 @@ const handleCluster= async() =>{
 
         try{
             let rt = await window.ckb.request({method:"ckb_signRawTransaction",data:{
-                    txSkeleton:txObj
+                    txSkeleton:txObj,
+                    type:"skeleton_object"
                 }})
             setRawSignObj(rt)
         }catch (e) {
@@ -595,7 +596,8 @@ const handleCluster= async() =>{
 
         try{
             let rt = await window.ckb.request({method:"ckb_sendRawTransaction",data:{
-                txSkeleton:txObj
+                txSkeleton:txObj,
+                    type:"skeleton_object"
                 }})
             setRawHash(rt)
         }catch (e) {
