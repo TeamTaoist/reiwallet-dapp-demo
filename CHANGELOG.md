@@ -1,3 +1,12 @@
+## [0.1.7](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.1.6...v0.1.7) (2024-08-19)
+
+
+### Bug Fixes
+
+* remove type in sign/send ([331374c](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/331374c9eb82f5de1e99eb71bb2b7bec3d812a81))
+
+
+
 ## [0.1.6](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.1.5...v0.1.6) (2024-08-19)
 
 
