@@ -1,3 +1,12 @@
+## [0.1.6](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.1.5...v0.1.6) (2024-08-19)
+
+
+### Bug Fixes
+
+* update sign/send type ([c841d00](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/c841d0042bed2003ed4597f4a17b8c9789253aa8))
+
+
+
 ## [0.1.5](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.1.4...v0.1.5) (2024-08-15)
 
 
