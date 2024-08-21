@@ -10,6 +10,8 @@ import GithubImg from "./images/GitHub.png";
 import TelegramImg from "./images/Telegram.svg";
 import {ckbHash} from "@ckb-lumos/base/lib/utils.js";
 
+import { ParamsFormatter} from "@ckb-lumos/rpc";
+
 const FlexBox = styled.div`
     display: flex;
     align-items: center;
@@ -198,7 +200,9 @@ function App() {
 
     const [PublicKey,setPublikey] = useState('')
     const [rawHash,setRawHash] = useState('')
+    const [rawHashRPC,setRawHashRPC] = useState('')
     const [rawSignObj,setRawSignObj] = useState('')
+    const [rawSignObjRPC,setRawSignObjRPC] = useState('')
     const [showTips,setShowTips] = useState(true)
     const [isConnected,setIsConnected] = useState('')
 
@@ -384,7 +388,7 @@ function App() {
             await getNetwork()
             console.log(rt)
         }catch (e) {
-            console.error("==ckb_sendCKB=",e)
+            console.error("==switch Network=",e)
             notification.error({
                 message: "switch Network",
                 description:e
@@ -396,6 +400,7 @@ function App() {
         try{
             let rt = await window.ckb.request({method:"ckb_getFeeRate"})
             setFeeRate(rt)
+            return rt;
         }catch (e) {
             console.error("==getFeeRate=",e)
             notification.error({
@@ -515,31 +520,7 @@ const handleCluster= async() =>{
     }
 
     const handleSignTransaction = async () =>{
-        await getFeeRate();
-        await getNetwork();
-
-        if(!feeRate)return;
-
-        if(network === "mainnet"){
-            config.initializeConfig(config.predefined.LINA);
-        }else{
-            config.initializeConfig(config.predefined.AGGRON4);
-        }
-
-
-
-        let fee = feeRate.median;
-        let feeFormat = BI.from(fee)
-
-        const indexer = new Indexer("https://testnet.ckb.dev/indexer", "https://testnet.ckb.dev/rpc");
-        let txSkeleton = helpers.TransactionSkeleton({ cellProvider: indexer });
-
-        let amountFormat = parseUnit(amount, "ckb");
-
-
-        txSkeleton = await commons.common.transfer(txSkeleton, [address], sendTo, amountFormat);
-        txSkeleton = await commons.common.payFeeByFeeRate(txSkeleton, [address], feeFormat /*fee_rate*/);
-
+        const txSkeleton = await createTransaction()
         const txObj = helpers.transactionSkeletonToObject(txSkeleton)
 
         console.log(txObj)
@@ -560,19 +541,64 @@ const handleCluster= async() =>{
         }
 
     }
+    const handleSignTransactionRPC = async () =>{
+        const txSkeleton = await createTransaction()
+        const txObj = helpers.createTransactionFromSkeleton(txSkeleton)
+        const resultObj = ParamsFormatter.toRawTransaction(txObj)
 
-    const handleSendTransaction = async() =>{
+        console.log(JSON.stringify(resultObj))
 
-        await getFeeRate();
+        try{
+            let rt = await window.ckb.request({method:"ckb_signTransaction",data:{
+                    txSkeleton:resultObj
+                }})
+            setRawSignObjRPC(rt)
+        }catch (e) {
+            console.error("==Sign Transaction=",e)
+
+            notification.error({
+                message: "Sign Transaction",
+                description:e
+            });
+        }
+
+    }
+    const handleSendTransactionRPC = async () =>{
+        const txSkeleton = await createTransaction()
+        const txObj = helpers.createTransactionFromSkeleton(txSkeleton)
+        const resultObj = ParamsFormatter.toRawTransaction(txObj)
+
+        try{
+            let rt = await window.ckb.request({method:"ckb_sendTransaction",data:{
+                    txSkeleton:resultObj
+                }})
+            setRawHashRPC(rt)
+        }catch (e) {
+            console.error("==Send Transaction=",e)
+
+            notification.error({
+                message: "Send Transaction",
+                description:e
+            });
+        }
+
+    }
+
+
+
+    const createTransaction = async() =>{
+        let feeRate = await getFeeRate();
         await getNetwork();
-        if(!feeRate)return;
 
+
+        if(!feeRate)return;
 
         if(network === "mainnet"){
             config.initializeConfig(config.predefined.LINA);
         }else{
             config.initializeConfig(config.predefined.AGGRON4);
         }
+
 
 
         let fee = feeRate.median;
@@ -586,12 +612,15 @@ const handleCluster= async() =>{
 
         txSkeleton = await commons.common.transfer(txSkeleton, [address], sendTo, amountFormat);
         txSkeleton = await commons.common.payFeeByFeeRate(txSkeleton, [address], feeFormat /*fee_rate*/);
+        return txSkeleton;
+    }
 
+    const handleSendTransaction = async() =>{
+
+        const txSkeleton = await createTransaction()
         const txObj = helpers.transactionSkeletonToObject(txSkeleton)
 
         console.log(txObj)
-
-
 
         try{
             let rt = await window.ckb.request({method:"ckb_sendRawTransaction",data:{
@@ -704,7 +733,8 @@ const handleCluster= async() =>{
                 </div>
                 <FlexRhtBox>
                     <Button type="primary" onClick={() => testSign()} size="large">sign message</Button>
-                    <Button type="primary" disabled={!signature} onClick={() => verifyMessage()} size="large">verify message</Button>
+                    <Button type="primary" disabled={!signature} onClick={() => verifyMessage()} size="large">verify
+                        message</Button>
                 </FlexRhtBox>
 
             </li>
@@ -714,7 +744,7 @@ const handleCluster= async() =>{
             </li>
 
             <li className="noFlex">
-            <div>
+                <div>
                     <div className="flex"><span>Transfer To</span><Input value={sendTo} name="sendTo" size="large"
                                                                          onChange={(e) => handleInput(e)}/></div>
 
@@ -861,16 +891,36 @@ const handleCluster= async() =>{
 
             <li>
                 <div>
-                    <Button type="primary" onClick={() => handleSignTransaction()}  size="large">Sign transaction</Button>
+                    <Button type="primary" onClick={() => handleSignTransactionRPC()} size="large">Sign
+                        transaction</Button>
 
                 </div>
-                <div className="jsonBg">{JSON.stringify(rawSignObj,null,4)}</div>
+                <div className="jsonBg">{JSON.stringify(rawSignObjRPC, null, 4)}</div>
             </li>
 
             <li>
                 <div>
-                    <Button type="primary" onClick={() => handleSendTransaction()}  size="large">Send
+                    <Button type="primary" onClick={() => handleSendTransactionRPC()} size="large">Send
                         Transaction</Button>
+
+                </div>
+                <div>{rawHashRPC}</div>
+            </li>
+
+
+            <li>
+                <div>
+                    <Button onClick={() => handleSignTransaction()} size="large">Sign
+                        transaction(deprecated)</Button>
+
+                </div>
+                <div className="jsonBg">{JSON.stringify(rawSignObj, null, 4)}</div>
+            </li>
+
+            <li>
+                <div>
+                    <Button onClick={() => handleSendTransaction()} size="large">Send
+                        Transaction(deprecated)</Button>
 
                 </div>
                 <div>{rawHash}</div>

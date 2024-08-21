@@ -178,7 +178,72 @@ args: XUDT's args(RPC)
 code_hash: XUDT's code_hash(RPC)
 hash_type: XUDT's hash_type(RPC)
 
+
 ### 15. Sign Raw Transaction
+```
+await window.ckb.request({method:"ckb_signTransaction",data:{
+    txSkeleton:{...}
+}})
+
+```
+TxSkeleton format is the same with RPC transaction:
+```
+{
+	"version": "0x0",
+	"cell_deps": [{
+		"out_point": {
+			"tx_hash": "0x...",
+			"index": "0x0"
+		},
+		"dep_type": "dep_group"
+	}],
+	"inputs": [{
+		"previous_output": {
+			"tx_hash": "0x...",
+			"index": "0x0"
+		},
+		"since": "0x0"
+	}, {
+		"previous_output": {
+			"tx_hash": "0x...",
+			"index": "0x1"
+		},
+		"since": "0x0"
+	}],
+	"outputs": [{
+		"capacity": "0x2540be400",
+		"lock": {
+			"code_hash":  "0x...",
+			"hash_type": "type",
+			"args": "0x..."
+		}
+	}, {
+		"capacity": "0x47387e42959",
+		"lock": {
+			"code_hash":  "0x...",
+			"hash_type": "type",
+			"args": "0x..."
+		}
+	}],
+	"outputs_data": ["0x", "0x"],
+	"header_deps": [],
+	"witnesses": [ "0x...", "0x"]
+}
+
+```
+
+### 16. Send Raw Transaction
+```
+await window.ckb.request({method:"ckb_sendTransaction",data:{
+    txSkeleton:{...}
+}})
+
+```
+```
+TxSkeleton format is the same  as above
+```
+
+### 17. Sign Raw Transaction(deprecated)
 ```
 await window.ckb.request({method:"ckb_signRawTransaction",data:{
     txSkeleton:{...}
@@ -258,7 +323,7 @@ TxSkeleton format is the same with txSkeleton that generated from ckb lumos:
 
 ```
 
-### 16. Send Raw Transaction
+### 18. Send Raw Transaction(deprecated)
 ```
 await window.ckb.request({method:"ckb_sendRawTransaction",data:{
     txSkeleton:{...}
