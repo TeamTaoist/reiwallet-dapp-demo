@@ -226,9 +226,9 @@ function App() {
     },[])
 
     useEffect(()=>{
-        if(!window.rei?.ckb) return;
-        window.rei.ckb.on('accountsChanged', accountChangesFun);
-        window.rei.ckb.on('chainChanged', function (data) {
+        if(!window?.ckb) return;
+        window.ckb.on('accountsChanged', accountChangesFun);
+        window.ckb.on('chainChanged', function (data) {
 
             console.log("==chainChanged==",data)
         });
@@ -237,7 +237,7 @@ function App() {
 
     const connect = async() =>{
         try{
-            let addr =  await window.rei.ckb.request({method:"ckb_requestAccounts"})
+            let addr =  await window.ckb.request({method:"ckb_requestAccounts"})
             setAddress(addr)
         }catch (e) {
             console.error("==connect=",e)
@@ -249,12 +249,10 @@ function App() {
         }
 
     }
-
-
     const getCapacity = async () =>{
         try{
 
-            let rt =  await window.rei.ckb.request({method:"ckb_getCapacity",data:[address]})
+            let rt =  await window.ckb.request({method:"ckb_getCapacity",data:[address]})
             const {capacity,occupied} = rt;
             setBalance({
                 capacity:formatUnit(capacity,"ckb"),
@@ -272,7 +270,7 @@ function App() {
 
     const testSign = async() =>{
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_signMessage",data:{message}})
+            let rt = await window.ckb.request({method:"ckb_signMessage",data:{message}})
             setSignature(rt);
         }catch (e) {
             console.error("==signMessage=",e)
@@ -292,7 +290,7 @@ function App() {
 
        let rt= hd.key.recoverFromSignature(newMessage,signature)
 
-        let publickey = await window.rei.ckb.request({method:"ckb_getPublicKey"})
+        let publickey = await window.ckb.request({method:"ckb_getPublicKey"})
         setSignValid(publickey === rt?"valid":"invalid")
 
         console.log(rt)
@@ -302,7 +300,7 @@ function App() {
 
     const handleSend = async() =>{
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_sendCKB",data:{
+            let rt = await window.ckb.request({method:"ckb_sendCKB",data:{
                     amount,
                     to:sendTo
                 }})
@@ -377,7 +375,7 @@ function App() {
 
     const getNetwork = async() =>{
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_getNetwork"})
+            let rt = await window.ckb.request({method:"ckb_getNetwork"})
             setNetwork(rt);
         }catch (e) {
             console.error("==ckb_sendCKB=",e)
@@ -386,7 +384,7 @@ function App() {
     const switchNetwork = async() =>{
         let data = network === "mainnet"?'testnet':"mainnet"
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_switchNetwork",data})
+            let rt = await window.ckb.request({method:"ckb_switchNetwork",data})
             await getNetwork()
             console.log(rt)
         }catch (e) {
@@ -400,7 +398,7 @@ function App() {
 
     const getFeeRate = async() =>{
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_getFeeRate"})
+            let rt = await window.ckb.request({method:"ckb_getFeeRate"})
             setFeeRate(rt)
             return rt;
         }catch (e) {
@@ -414,7 +412,7 @@ function App() {
 
     const getConnected = async() =>{
         try{
-            let rt = await window.rei.ckb.isConnected()
+            let rt = await window.ckb.isConnected()
             console.log(rt)
             setIsConnected(rt)
 
@@ -429,7 +427,7 @@ function App() {
 
     const offAccount = () =>{
 
-       window.rei.ckb.off('accountsChanged', accountChangesFun)
+       window.ckb.off('accountsChanged', accountChangesFun)
         notification.success({
             message: "off Account Successful",
         });
@@ -439,7 +437,7 @@ function App() {
 
     const handleSendDob = async() =>{
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_sendDOB",data:{
+            let rt = await window.ckb.request({method:"ckb_sendDOB",data:{
                     outPoint:{
                         index:txIndex,
                         txHash:txDobHash
@@ -462,7 +460,7 @@ function App() {
 
 const handleCluster= async() =>{
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_sendCluster",data:{
+            let rt = await window.ckb.request({method:"ckb_sendCluster",data:{
                     outPoint:{
                         index:ClusterIndex,
                         txHash:ClusterHash
@@ -482,7 +480,7 @@ const handleCluster= async() =>{
 
     // const handleSendSUDT = async() =>{
     //     try{
-    //         let rt = await window.rei.ckb.request({method:"ckb_sendSUDT",data:{
+    //         let rt = await window.ckb.request({method:"ckb_sendSUDT",data:{
     //                 amount:SUDTamount,
     //                 to:sendToSUDT,
     //                 token
@@ -500,7 +498,7 @@ const handleCluster= async() =>{
     const handleSendXUDT = async() =>{
 
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_sendXUDT",data:{
+            let rt = await window.ckb.request({method:"ckb_sendXUDT",data:{
                     amount:XUDTamount,
                     to:sendToXUDT,
                     typeScript:{
@@ -529,7 +527,7 @@ const handleCluster= async() =>{
 
 
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_signRawTransaction",data:{
+            let rt = await window.ckb.request({method:"ckb_signRawTransaction",data:{
                     txSkeleton:txObj
                 }})
             setRawSignObj(rt)
@@ -551,11 +549,10 @@ const handleCluster= async() =>{
         console.log(JSON.stringify(resultObj))
 
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_signTransaction",data:{
+            let rt = await window.ckb.request({method:"ckb_signTransaction",data:{
                     txSkeleton:resultObj
                 }})
             setRawSignObjRPC(rt)
-            await connect()
         }catch (e) {
             console.error("==Sign Transaction=",e)
 
@@ -572,7 +569,7 @@ const handleCluster= async() =>{
         const resultObj = ParamsFormatter.toRawTransaction(txObj)
 
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_sendTransaction",data:{
+            let rt = await window.ckb.request({method:"ckb_sendTransaction",data:{
                     txSkeleton:resultObj
                 }})
             setRawHashRPC(rt)
@@ -626,7 +623,7 @@ const handleCluster= async() =>{
         console.log(txObj)
 
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_sendRawTransaction",data:{
+            let rt = await window.ckb.request({method:"ckb_sendRawTransaction",data:{
                 txSkeleton:txObj
                 }})
             setRawHash(rt)
@@ -643,7 +640,7 @@ const handleCluster= async() =>{
 
     const getPublicKey = async() =>{
         try{
-            let rt = await window.rei.ckb.request({method:"ckb_getPublicKey"})
+            let rt = await window.ckb.request({method:"ckb_getPublicKey"})
             setPublikey(rt)
         }catch (e) {
             console.error("==ckb_getPublicKey=",e)
