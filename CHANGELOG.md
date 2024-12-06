@@ -1,3 +1,12 @@
+## [0.2.1](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.2.0...v0.2.1) (2024-12-06)
+
+
+### Reverts
+
+* Revert "feat: update window.rei.ckb" ([9030874](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/9030874a7ac165b0767856625c789cbec4fb7148))
+
+
+
 # [0.2.0](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.1.8...v0.2.0) (2024-12-06)
 
 
