@@ -1,3 +1,12 @@
+# [0.2.0](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.1.8...v0.2.0) (2024-12-06)
+
+
+### Features
+
+* update window.rei.ckb ([2281d54](https://github.com/TeamTaoist/reiwallet-dapp-demo/commit/2281d54316dc188cdcb4de168751ec3a53558057))
+
+
+
 ## [0.1.8](https://github.com/TeamTaoist/reiwallet-dapp-demo/compare/v0.1.7...v0.1.8) (2024-08-21)
 
 
