@@ -212,13 +212,13 @@ function App() {
 
 
     useEffect(() => {
-        if(!window?.ckb) {
+        if(!window.rei?.ckb) {
             setShowTips(true)
         }else{
             setShowTips(false)
         }
 
-    }, [window?.ckb]);
+    }, [window.rei?.ckb]);
 
 
     const  accountChangesFun =  useCallback((data) => {
